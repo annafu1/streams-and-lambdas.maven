@@ -2,6 +2,8 @@ package com.zipcodewilmington.streams;
 
 import com.zipcodewilmington.streams.anthropoid.Person;
 import com.zipcodewilmington.streams.anthropoid.PersonFactory;
+import com.zipcodewilmington.streams.conversions.ArrayConverter;
+import com.zipcodewilmington.streams.conversions.ListConverter;
 import com.zipcodewilmington.streams.tools.RandomUtils;
 import com.zipcodewilmington.streams.tools.StringUtils;
 
@@ -19,8 +21,8 @@ public class StreamFilter {
     /**
      * No arg constructor
      */ //TODO - construct person stream of 100 person objects; startingCharacter is a random capital letter
-    public StreamFilter() {
-        this(Stream.empty(), null);
+    public StreamFilter() { // have to use random utils info to fill out the filter to check randomly the person w character a,z
+        this(new PersonFactory().createPersonStream(100),RandomUtils.createCharacter('A','Z'));
     }
 
     /**
@@ -28,7 +30,7 @@ public class StreamFilter {
      * @param startingCharacter - character to filter by
      */ //TODO
     public StreamFilter(Person[] people, Character startingCharacter) {
-        this(Stream.empty(), null);
+        this(new ArrayConverter(people).toStream(),startingCharacter);
     }
 
     /**
@@ -36,7 +38,7 @@ public class StreamFilter {
      * @param startingCharacter - character to filter by
      */ //TODO
     public StreamFilter(List<Person> people, Character startingCharacter) {
-        this(Stream.empty(), null);
+        this(new ListConverter(people).toStream(),startingCharacter);
     }
 
 
@@ -55,7 +57,12 @@ public class StreamFilter {
      * @return a list of person object whose name starts with `this.startingCharacter`
      */ //TODO
     public List<Person> toListMultiLine() {
-        return null;
+        return personStream.filter (
+                p -> {
+                    String fLetter = String.valueOf(p.getName().charAt(0)); //looking at starting character
+                    return fLetter.equals(startingCharacter); //return true/false
+                }
+        ).collect(Collectors.toList());
     }
 
 
@@ -64,7 +71,7 @@ public class StreamFilter {
      * @return a list of person objects whose name starts with `this.startingCharacter`
      */ //TODO
     public List<Person> toListOneLine() {
-        return null;
+        return personStream.filter(p -> String.valueOf(p.getName().startsWith(startingCharacter)).equals(startingCharacter)).collect(Collectors.toList());
     }
 
 
@@ -73,7 +80,7 @@ public class StreamFilter {
      * @return an array of person object whose name starts with `this.startingCharacter`
      */ //TODO
     public Person[] toArrayOneLine() {
-        return null;
+        return personStream.filter(p ->String.valueOf(p.getName().charAt(0)).equals(this.startingCharacter)).collect(Collectors.toList()).toArray(new Person[0]);
     }
 
 
@@ -82,7 +89,11 @@ public class StreamFilter {
      * @return an array of person object whose name starts with `this.startingCharacter`
      */ //TODO
     public Person[] toArrayMultiLine() {
-        return null;
+        return personStream.filter(p -> {
+                    String fLetter = String.valueOf(p.getName().charAt(0));
+                    return fLetter.equals(this.startingCharacter);
+                }
+        ).collect(Collectors.toList()).toArray(new Person[0]);
     }
 
 }

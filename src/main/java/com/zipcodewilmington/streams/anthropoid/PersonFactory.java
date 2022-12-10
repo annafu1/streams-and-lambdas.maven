@@ -39,7 +39,7 @@ public final class PersonFactory {
      * @return - ArrayList of Person objects
      */ // TODO
     public List<Person> createPersonList(int listSize) {
-        return null;
+        return createPersonStream(listSize).collect(Collectors.toList()); //this is giving structure of a list taking the streams of random people
     }
 
 
@@ -48,7 +48,7 @@ public final class PersonFactory {
      * @return - Array of Person objects
      */ // TODO
     public Person[] createPersonArray(int arrayLength) {
-        return null;
+        return createPersonStream(arrayLength).toArray(size -> new Person[arrayLength]); //this is giving structure of array length limited by stream count from the method
     }
 
 
@@ -59,6 +59,6 @@ public final class PersonFactory {
      * @return - Stream representation of collection of Person objects
      */ // TODO
     public Stream<Person> createPersonStream(int streamCount) {
-        return null;
+        return Stream.generate(this::createRandomPerson).limit(streamCount); //taking this stream to generate to a random person
     }
 }
